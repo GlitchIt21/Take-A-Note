@@ -57,6 +57,17 @@ class VentanaPrincipal(QMainWindow):
 
         sys.exit(0)
 
+    #esta funcion devuelve un string con la cantidad de carácteres que se encuentran en el campo de texto cada vez que el texto cambia
+
+    def contadorDeCaracteres(self):
+            self.statusBar().clearMessage()
+            char = self.campoDeTexto.toPlainText()
+            cant_textchar = len(char)
+            self.contadorDeChar.setText('Carácteres: ' + str(cant_textchar))
+            self.statusBar().addWidget(self.contadorDeChar)
+
+    #ventana de la interfaz gráfica
+
     def __init__(self):
 
     #Medidas de la ventana
@@ -120,9 +131,11 @@ class VentanaPrincipal(QMainWindow):
         self.setCentralWidget(widget)
 
     #barra de estado
-
-        self.statusBar().showMessage('esta es mi barra de estado')
-
+        self.estado = QStatusBar()
+        self.contadorDeChar = QLabel()
+        self.statusBar().showMessage('Carácteres: 0')
+        self.campoDeTexto.textChanged.connect(self.contadorDeCaracteres)
+        
 
 
 if __name__ == '__main__' :
