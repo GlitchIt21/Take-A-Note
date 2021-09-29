@@ -7,7 +7,7 @@ class VentanaPrincipal(QMainWindow):
     #esta funcion se encarga de guardar el archivo si este no existe (hay que agregar ".txt" al final del nombre, sino el documento 
     # no se guardará correctamente)
 
-    def guardarArchivoComo(self, e):
+    def guardarArchivoComo(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
 
@@ -16,10 +16,9 @@ class VentanaPrincipal(QMainWindow):
         with open(archivo, 'wt') as f:
             f.write(self.campoDeTexto.toPlainText())
 
-    
     #esta funcion se encarga de guardar el archivo ya existente
 
-    def guardarArchivo(self, e):
+    def guardarArchivo(self):
         archivoGuardado = self.archivo
         if( os.path.exists(archivoGuardado[0]) == True):
             with open(archivoGuardado[0], 'wt') as f:
@@ -34,7 +33,7 @@ class VentanaPrincipal(QMainWindow):
             self.botonGuardar.setEnabled(False)
 
     #esta funcion limpia lo que está escrito (hay que apretarla dos veces)
-    def nuevo(self, e):
+    def nuevo(self):
         self.campoDeTexto.setText("")
         if(self.campoDeTexto != ""):
             self.botonGuardar.setEnabled(False)
@@ -42,7 +41,7 @@ class VentanaPrincipal(QMainWindow):
 
     #esta funcion se encarga de abrir un archivo que ya existe 
 
-    def abrir_archivos(self, e):
+    def abrir_archivos(self):
         self.archivo = QFileDialog.getOpenFileName(self, 'Abrir un documento existente', 'C:\\', "Text files (*.txt)")
         if self.archivo[0]:
             with open(self.archivo[0], 'rt') as f:
@@ -51,11 +50,44 @@ class VentanaPrincipal(QMainWindow):
         
         self.existe = self.existe + 1
 
-    #esta función se encarga de cerrar el programa correctamente 
+    #estas dos funciones se encargan de cerrar el programa correctamente. Primero se chequea si el contenido del campo de 
+    #texto cambió, si cambió y se apreta el botón salir, se abrirá un dialogo para preguntarle al usuario si este ha 
+    #guardado los nuevos cambios o si de no existir el archivo, crear uno nuevo para guardar el contenido.
 
-    def salir(self, e):
+    def text_changedSalir(self):
+        self.botonSalir.clicked.connect(self.salir)
 
-        sys.exit(0)
+    def salir(self):
+        enabled = self.botonGuardar.isEnabled()
+        warning = QMessageBox()
+        warning.setWindowTitle("Salir")
+        warning.setText('¡Estás por salir!')
+
+        if(enabled == False):
+            warning.setInformativeText('¿Deseas guardar los cambios en un documento nuevo?')
+            warning.setStandardButtons(QMessageBox.Save| QMessageBox.Close)
+            warning.exec_()
+            ret = warning.exec()
+
+            if(ret == 2048):
+                self.guardarArchivoComo()
+                sys.exit(0)
+            else: 
+                sys.exit(0)
+
+        elif(enabled == True):
+            warning.setInformativeText('¿Deseas guardar los cambios?')
+            warning.setStandardButtons(QMessageBox.Save| QMessageBox.Close)
+            warning.exec_()
+            ret = warning.exec()
+            if(ret == 2048):
+                self.guardarArchivo()
+                sys.exit(0)
+            else: 
+                sys.exit(0)
+
+        else: 
+            sys.exit(0)
 
     #esta funcion devuelve un string con la cantidad de carácteres que se encuentran en el campo de texto cada vez que el texto cambia
 
@@ -91,27 +123,28 @@ class VentanaPrincipal(QMainWindow):
         notaAbrir = QPushButton()
         self.botonGuardar = QPushButton()
         notaGuardarComo = QPushButton()
-        botonSalir = QPushButton()
+        self.botonSalir = QPushButton()
 
         notaNueva.setText('Nuevo documento')
         notaAbrir.setText('Abrir un documento existente')
         self.botonGuardar.setText('Guardar')
         notaGuardarComo.setText('Guardar como...')
-        botonSalir.setText('Salir')
+        self.botonSalir.setText('Salir')
 
         notaNueva.clicked.connect(self.nuevo)
         notaAbrir.clicked.connect(self.abrir_archivos)
         self.botonGuardar.clicked.connect(self.guardarArchivo)
         self.botonGuardar.setEnabled(False)
         notaGuardarComo.clicked.connect(self.guardarArchivoComo)
-        botonSalir.clicked.connect(self.salir)
+        #self.botonSalir.clicked.connect(self.funcioncualquiera)
         
         menu.addWidget(notaNueva)
         menu.addWidget(notaAbrir)
         menu.addWidget(self.botonGuardar)
         menu.addWidget(notaGuardarComo)
-        menu.addWidget(botonSalir)
+        menu.addWidget(self.botonSalir)
 
+    #variables genéricas o establecidas por defecto
         self.existe = 0
 
     #Campo de texto
@@ -120,7 +153,7 @@ class VentanaPrincipal(QMainWindow):
 
         self.campoDeTexto = QTextEdit()
         self.campoDeTexto.textChanged.connect(self.botonGuardar_changed)
-        #self.campoDeTexto.textChanged.connect(self.guardarArchComo_changed)
+        self.campoDeTexto.textChanged.connect(self.text_changedSalir)
         self.campoDeTexto.setPlaceholderText('¡Empieza por escribir algo!')
         container.addWidget(self.campoDeTexto)
 
