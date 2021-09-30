@@ -10,6 +10,11 @@ class VentanaPrincipal(QMainWindow):
     def guardarArchivoComo(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
+        msg = QMessageBox()
+        msg.setWindowTitle('¡Importante!')
+        msg.setText('Recuerda colocar ".txt" al final del nombre de tu archivo para que este se guarde correctamente')
+        msg.setIcon(QMessageBox.Information)
+        msg.addButton(QMessageBox.Ok)
 
         archivo, _ = QFileDialog.getSaveFileName(self, 'Guardar', 'C:\\', 'Text files (*.txt)', options = options)
 
@@ -61,9 +66,9 @@ class VentanaPrincipal(QMainWindow):
     #guardado los nuevos cambios o si de no existir el archivo, crear uno nuevo para guardar el contenido.
 
     def text_changedSalir(self):
-        self.botonSalir.clicked.connect(self.salir)
+        self.botonSalir.clicked.connect(self.salir_ifTextChanged)
 
-    def salir(self):
+    def salir_ifTextChanged(self):
         enabled = self.botonGuardar.isEnabled()
         datos = self.campoDeTexto.toPlainText()
         warning = QMessageBox()
@@ -141,8 +146,7 @@ class VentanaPrincipal(QMainWindow):
         self.botonGuardar.clicked.connect(self.guardarArchivo)
         self.botonGuardar.setEnabled(False)
         notaGuardarComo.clicked.connect(self.guardarArchivoComo)
-        #self.botonSalir.clicked.connect(self.funcioncualquiera)
-        
+
         menu.addWidget(notaNueva)
         menu.addWidget(notaAbrir)
         menu.addWidget(self.botonGuardar)
@@ -161,7 +165,6 @@ class VentanaPrincipal(QMainWindow):
         self.campoDeTexto.textChanged.connect(self.text_changedSalir)
         self.campoDeTexto.setPlaceholderText('¡Empieza por escribir algo!')
         container.addWidget(self.campoDeTexto)
-
         containerPrincipal.addLayout(menu)
         containerPrincipal.addLayout(container)
         widget = QWidget()
@@ -174,7 +177,6 @@ class VentanaPrincipal(QMainWindow):
         self.statusBar().showMessage('Carácteres: 0')
         self.campoDeTexto.textChanged.connect(self.contadorDeCaracteres)
         
-
 
 if __name__ == '__main__' :
     blocDeNotas = QApplication(sys.argv)
