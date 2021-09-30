@@ -24,7 +24,8 @@ class VentanaPrincipal(QMainWindow):
             nombre = archivo.format(__name__)
             self.setWindowTitle(self.nombre_programa + ': ' + nombre)
             
-    #esta funcion se encarga de guardar el archivo ya existente
+    #esta funcion se encarga de guardar el archivo ya existente (sobreescribe el texto del documento con el nuevo texto 
+    # dentro del campo de texto)
 
     def guardarArchivo(self):
         archivoGuardado = self.archivo
@@ -32,7 +33,7 @@ class VentanaPrincipal(QMainWindow):
             with open(archivoGuardado[0], 'wt') as f:
                 f.write(self.campoDeTexto.toPlainText())
 
-    #esta función hace que el botón "Guardar" solo se active cuando sea un archivo que ya existe
+    #esta función hace que el botón "Guardar" solo se active cuando se esté escribiendo en un documento existente 
 
     def botonGuardar_changed(self):
         if (self.existe == 1):
@@ -40,7 +41,8 @@ class VentanaPrincipal(QMainWindow):
         else:
             self.botonGuardar.setEnabled(False)
 
-    #esta funcion limpia lo que está escrito (hay que apretarla dos veces)
+    #esta funcion limpia lo que está escrito en el campo de texto
+
     def nuevo(self):
         self.campoDeTexto.setText("")
         if(self.campoDeTexto != ""):
@@ -48,7 +50,7 @@ class VentanaPrincipal(QMainWindow):
             self.setWindowTitle(self.nombre_programa + ": " + self.sinTitulo)
             self.existe = self.existe - 1
 
-    #esta funcion se encarga de abrir un archivo que ya existe 
+    #esta funcion se encarga de abrir un documento de texto
 
     def abrir_archivos(self):
         self.archivo = QFileDialog.getOpenFileName(self, 'Abrir un documento existente', 'C:\\', "Text files (*.txt)")
@@ -108,7 +110,7 @@ class VentanaPrincipal(QMainWindow):
             self.contadorDeChar.setText('Carácteres: ' + str(cant_textchar))
             self.statusBar().addWidget(self.contadorDeChar)
 
-    #ventana de la interfaz gráfica
+    #-------------------------------------- VENTANA DE LA INTERFAZ GRÁFICA --------------------------------------
 
     def __init__(self):
 
@@ -126,7 +128,7 @@ class VentanaPrincipal(QMainWindow):
 
         containerPrincipal = QVBoxLayout()
 
-    #Menú interactivo
+    #-------------------------------------------MENÚ INTERACTICO--------------------------------------------------
 
         menu = QHBoxLayout()
         notaNueva = QPushButton()
@@ -153,10 +155,10 @@ class VentanaPrincipal(QMainWindow):
         menu.addWidget(notaGuardarComo)
         menu.addWidget(self.botonSalir)
 
-    #variables genéricas o establecidas por defecto
+        #una variable genérica para ayudar al correcto funcionamiento del botón Guardar Como 
         self.existe = 0
 
-    #Campo de texto
+    #---------------------------------------------------CAMPO DE TEXTO -------------------------------------------------
 
         container = QHBoxLayout()
 
@@ -171,7 +173,7 @@ class VentanaPrincipal(QMainWindow):
         widget.setLayout(containerPrincipal)
         self.setCentralWidget(widget)
 
-    #barra de estado
+    #------------------------------------------------ BARRA DE ESTADO ---------------------------------------------------
         self.estado = QStatusBar()
         self.contadorDeChar = QLabel()
         self.statusBar().showMessage('Carácteres: 0')
