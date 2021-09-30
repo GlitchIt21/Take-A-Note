@@ -109,7 +109,7 @@ class VentanaPrincipal(QMainWindow):
             sys.exit(0)
 
     #funciona al apretar directamente el botón sin que el texto haya cambiado
-    
+
     def salirCorrectamente(self):
         datos = self.campoDeTexto.toPlainText()
         if(datos == ""):
@@ -147,29 +147,35 @@ class VentanaPrincipal(QMainWindow):
     #-------------------------------------------MENÚ INTERACTICO--------------------------------------------------
 
         menu = QHBoxLayout()
-        notaNueva = QPushButton()
-        notaAbrir = QPushButton()
+        botonNuevo = QPushButton()
+        botonAbrir = QPushButton()
         self.botonGuardar = QPushButton()
-        notaGuardarComo = QPushButton()
+        botonGuardarComo = QPushButton()
         self.botonSalir = QPushButton()
 
-        notaNueva.setText('Nuevo documento')
-        notaAbrir.setText('Abrir un documento existente')
+        botonNuevo.setStyleSheet('background-color: pink')
+        botonAbrir.setStyleSheet('background-color: pink')
+        self.botonGuardar.setStyleSheet('background-color: pink')
+        botonGuardarComo.setStyleSheet('background-color: pink')
+        self.botonSalir.setStyleSheet('background-color: pink')
+
+        botonNuevo.setText('Nuevo documento')
+        botonAbrir.setText('Abrir un documento existente')
         self.botonGuardar.setText('Guardar')
-        notaGuardarComo.setText('Guardar como...')
+        botonGuardarComo.setText('Guardar como...')
         self.botonSalir.setText('Salir')
 
-        notaNueva.clicked.connect(self.nuevo)
-        notaAbrir.clicked.connect(self.abrir_archivos)
+        botonNuevo.clicked.connect(self.nuevo)
+        botonAbrir.clicked.connect(self.abrir_archivos)
         self.botonGuardar.clicked.connect(self.guardarArchivo)
         self.botonGuardar.setEnabled(False)
-        notaGuardarComo.clicked.connect(self.guardarArchivoComo)
+        botonGuardarComo.clicked.connect(self.guardarArchivoComo)
         self.botonSalir.clicked.connect(self.salirCorrectamente)
 
-        menu.addWidget(notaNueva)
-        menu.addWidget(notaAbrir)
+        menu.addWidget(botonNuevo)
+        menu.addWidget(botonAbrir)
         menu.addWidget(self.botonGuardar)
-        menu.addWidget(notaGuardarComo)
+        menu.addWidget(botonGuardarComo)
         menu.addWidget(self.botonSalir)
 
         #una variable genérica para ayudar al correcto funcionamiento del botón Guardar Como 
@@ -183,6 +189,11 @@ class VentanaPrincipal(QMainWindow):
         self.campoDeTexto.textChanged.connect(self.botonGuardar_changed)
         self.campoDeTexto.textChanged.connect(self.text_changedSalir)
         self.campoDeTexto.setPlaceholderText('¡Empieza por escribir algo!')
+
+        self.campoDeTexto.setStyleSheet('background-color: pink')
+
+    #--------------------------------------------------- CONTAINER -------------------------------------------------
+
         container.addWidget(self.campoDeTexto)
         containerPrincipal.addLayout(menu)
         containerPrincipal.addLayout(container)
