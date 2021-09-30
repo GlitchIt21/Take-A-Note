@@ -108,6 +108,8 @@ class VentanaPrincipal(QMainWindow):
         else: 
             sys.exit(0)
 
+    #funciona al apretar directamente el botón sin que el texto haya cambiado
+    
     def salirCorrectamente(self):
         datos = self.campoDeTexto.toPlainText()
         if(datos == ""):
