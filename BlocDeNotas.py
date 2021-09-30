@@ -15,7 +15,10 @@ class VentanaPrincipal(QMainWindow):
 
         with open(archivo, 'wt') as f:
             f.write(self.campoDeTexto.toPlainText())
-
+            self.existe = self.existe + 1
+            nombre = archivo.format(__name__)
+            self.setWindowTitle(self.nombre_programa + ': ' + nombre)
+            
     #esta funcion se encarga de guardar el archivo ya existente
 
     def guardarArchivo(self):
@@ -37,6 +40,7 @@ class VentanaPrincipal(QMainWindow):
         self.campoDeTexto.setText("")
         if(self.campoDeTexto != ""):
             self.botonGuardar.setEnabled(False)
+            self.setWindowTitle(self.nombre_programa + ": " + self.sinTitulo)
             self.existe = self.existe - 1
 
     #esta funcion se encarga de abrir un archivo que ya existe 
@@ -47,8 +51,10 @@ class VentanaPrincipal(QMainWindow):
             with open(self.archivo[0], 'rt') as f:
                 datos = f.read()
                 self.campoDeTexto.setText(datos)
+                self.existe = self.existe + 1
+                nombre = self.archivo[0].format(__name__)
+                self.setWindowTitle(self.nombre_programa + ': ' + nombre)
         
-        self.existe = self.existe + 1
 
     #estas dos funciones se encargan de cerrar el programa correctamente. Primero se chequea si el contenido del campo de 
     #texto cambió, si cambió y se apreta el botón salir, se abrirá un dialogo para preguntarle al usuario si este ha 
@@ -59,14 +65,14 @@ class VentanaPrincipal(QMainWindow):
 
     def salir(self):
         enabled = self.botonGuardar.isEnabled()
+        datos = self.campoDeTexto.toPlainText()
         warning = QMessageBox()
         warning.setWindowTitle("Salir")
         warning.setText('¡Estás por salir!')
 
-        if(enabled == False):
+        if(enabled == False and datos != ""):
             warning.setInformativeText('¿Deseas guardar los cambios en un documento nuevo?')
             warning.setStandardButtons(QMessageBox.Save| QMessageBox.Close)
-            warning.exec_()
             ret = warning.exec()
 
             if(ret == 2048):
@@ -75,10 +81,9 @@ class VentanaPrincipal(QMainWindow):
             else: 
                 sys.exit(0)
 
-        elif(enabled == True):
+        elif(enabled == True and datos != ""):
             warning.setInformativeText('¿Deseas guardar los cambios?')
             warning.setStandardButtons(QMessageBox.Save| QMessageBox.Close)
-            warning.exec_()
             ret = warning.exec()
             if(ret == 2048):
                 self.guardarArchivo()
@@ -105,9 +110,9 @@ class VentanaPrincipal(QMainWindow):
     #Medidas de la ventana
 
         super().__init__()
-        self.nombre_archivo = "Sin título"
+        self.sinTitulo = "Sin título"
         self.nombre_programa = "Take A Note"
-        self.setWindowTitle(self.nombre_programa + ": " + self.nombre_archivo)
+        self.setWindowTitle(self.nombre_programa + ": " + self.sinTitulo)
         self.posX = 400
         self.posY = 150
         self.ancho = 600
