@@ -16,7 +16,7 @@ class VentanaPrincipal(QMainWindow):
         msg.setIcon(QMessageBox.Information)
         msg.addButton(QMessageBox.Ok)
 
-        archivo, _ = QFileDialog.getSaveFileName(self, 'Guardar', 'C:\\', 'Text files (*.txt)', options = options)
+        archivo, _ = QFileDialog.getSaveFileName(self, 'Guardar', 'C:\\', 'Documentos de texto (*.txt)', options = options)
 
         with open(archivo, 'wt') as f:
             f.write(self.campoDeTexto.toPlainText())
@@ -108,6 +108,13 @@ class VentanaPrincipal(QMainWindow):
         else: 
             sys.exit(0)
 
+    def salirCorrectamente(self):
+        datos = self.campoDeTexto.toPlainText()
+        if(datos == ""):
+            sys.exit(0)
+        else:
+            self.text_changedSalir()
+
     #esta funcion devuelve un string con la cantidad de carácteres que se encuentran en el campo de texto cada vez que el texto cambia
 
     def contadorDeCaracteres(self):
@@ -155,6 +162,7 @@ class VentanaPrincipal(QMainWindow):
         self.botonGuardar.clicked.connect(self.guardarArchivo)
         self.botonGuardar.setEnabled(False)
         notaGuardarComo.clicked.connect(self.guardarArchivoComo)
+        self.botonSalir.clicked.connect(self.salirCorrectamente)
 
         menu.addWidget(notaNueva)
         menu.addWidget(notaAbrir)
