@@ -33,6 +33,13 @@ class VentanaPrincipal(QMainWindow):
             with open(archivoGuardado[0], 'wt') as f:
                 f.write(self.campoDeTexto.toPlainText())
 
+        msg = QMessageBox()
+        msg.setWindowTitle('Guardar')
+        msg.setText('Los cambios se han guardado correctamente.')
+        msg.setIcon(QMessageBox.Information)
+        msg.addButton(QMessageBox.Ok)
+        msg.exec_()
+
     #esta función hace que el botón "Guardar" solo se active cuando se esté escribiendo en un documento existente 
 
     def botonGuardar_changed(self):
